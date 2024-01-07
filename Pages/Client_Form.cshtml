@@ -1,0 +1,39 @@
+﻿@page
+@model RealEstatePipeline.Pages.Client_FormModel
+
+@{
+    ViewData["Title"] = "Client Inquiry Form";
+}
+
+<h2>Client Inquiry Form</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="ClientInfo.CustomerName">Name</label>
+        <input asp-for="ClientInfo.CustomerName" class="form-control" />
+        <span asp-validation-for="ClientInfo.CustomerName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ClientInfo.CustomerEmail">Email</label>
+        <input asp-for="ClientInfo.CustomerEmail" class="form-control" />
+        <span asp-validation-for="ClientInfo.CustomerEmail" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ClientInfo.PhoneNumber">Phone Number</label>
+        <input asp-for="ClientInfo.PhoneNumber" class="form-control" />
+        <span asp-validation-for="ClientInfo.PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ClientInfo.InquiryDetails">Inquiry Details</label>
+        <textarea asp-for="ClientInfo.InquiryDetails" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

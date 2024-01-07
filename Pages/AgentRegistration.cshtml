@@ -1,0 +1,150 @@
+﻿
+@page
+@model RealEstatePipeline.Pages.AgentRegistrationModel
+
+<h2>Agent Registration</h2>
+
+<form method="post">
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="Input.FirstName">First Name</label>
+        <input asp-for="Input.FirstName" class="form-control" />
+        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="Input.LastName">Last Name</label>
+        <input asp-for="Input.LastName" class="form-control" />
+        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="Input.Email">Email</label>
+        <input asp-for="Input.Email" class="form-control" />
+        <span asp-validation-for="Input.Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="Input.Password">Password</label>
+        <input asp-for="Input.Password" type="password" class="form-control" />
+        <span asp-validation-for="Input.Password" class="text-danger"></span>
+    </div>
+
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="Input.YearsOfExperience">Years of Experience</label>
+        <input asp-for="Input.YearsOfExperience" type="number" class="form-control" />
+    </div>
+
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="Input.ProfileDescription">Profile Description</label>
+        <textarea asp-for="Input.ProfileDescription" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="Input.LocationPreference">Location Specialization</label>
+        <textarea asp-for="Input.LocationPreference" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="Input.PreferredCommunicationMethod">Preferred Communication Method</label>
+        <select asp-for="Input.PreferredCommunicationMethod" class="form-control">
+            <option value="">Select a method</option>
+            <option value="Email">Email</option>
+            <option value="Phone">Phone</option>
+            <option value="Text">Text</option>
+            <!-- Add other options as necessary -->
+        </select>
+    </div>
+  
+    <div class="mb-4">
+        <label class="fw-bold">Property Specialization</label>
+        <div class="checkbox">
+            <label asp-for="Input.IsResidential">
+                 Residential
+            </label>
+            <input asp-for="Input.IsResidential" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="Input.IsCommercial">
+                Commercial
+            </label>
+            <input asp-for="Input.IsCommercial" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="Input.IsIndustrial">
+                 Industrial
+            </label>
+            <input asp-for="Input.IsIndustrial" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="Input.IsLand">
+                 Land
+            </label>
+            <input asp-for="Input.IsLand" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="Input.IsSpecialPurpose">
+                 Special Purpose
+            </label>
+            <input asp-for="Input.IsSpecialPurpose" />
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <label class ="fw-bold">
+            Languages Spoken</label>
+        <div class="row">
+            <div class="col-md-4 checkbox">
+                <label asp-for="Input.SpeaksEnglish">English</label>
+                <input asp-for="Input.SpeaksEnglish" type="checkbox" />
+            </div>
+            <div class="col-md-4 checkbox">
+                <label asp-for="Input.SpeaksSpanish">Spanish</label>
+                <input asp-for="Input.SpeaksSpanish" type="checkbox" />
+            </div>
+            <div class="col-md-4 checkbox">
+                <label asp-for="Input.SpeaksMandarin">Mandarin</label>
+                <input asp-for="Input.SpeaksMandarin" type="checkbox" />
+            </div>
+            <div class="col-md-4 checkbox">
+                <label asp-for="Input.SpeaksFrench">French</label>
+                <input asp-for="Input.SpeaksFrench" type="checkbox" />
+            </div>
+            <div class="col-md-4 checkbox">
+                <label asp-for="Input.SpeaksArabic">Arabic</label>
+                <input asp-for="Input.SpeaksArabic" type="checkbox" />
+            </div>
+            <div class="col-md-4 checkbox">
+                <label asp-for="Input.SpeaksRussian">Russian</label>
+                <input asp-for="Input.SpeaksRussian" type="checkbox" />
+            </div>
+            <div class="col-md-4 checkbox">
+                <label asp-for="Input.SpeaksPortuguese">Portuguese</label>
+                <input asp-for="Input.SpeaksPortuguese" type="checkbox" />
+            </div>
+            <div class="col-md-4 checkbox">
+                <label asp-for="Input.SpeaksGerman">German</label>
+                <input asp-for="Input.SpeaksGerman" type="checkbox" />
+            </div>
+            <div class="col-md-4 checkbox">
+                <label asp-for="Input.SpeaksJapanese">Japanese</label>
+                <input asp-for="Input.SpeaksJapanese" type="checkbox" />
+            </div>
+            <div class="col-md-4 checkbox">
+                <label asp-for="Input.SpeaksHindi">Hindi</label>
+                <input asp-for="Input.SpeaksHindi" type="checkbox" />
+            </div>
+            <!-- Add more languages as needed -->
+        </div>
+    </div>
+
+
+
+    <!-- Additional fields can be added here -->
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>
+
+@section Scripts {
+    
+}
+

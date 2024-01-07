@@ -1,0 +1,20 @@
+﻿@page
+@model RealEstatePipeline.Pages.ClientDashboardModel
+@{
+    var isUserLoggedIn = Model.IsUserLoggedIn();
+    var userName = Model.GetUserName();
+    var userEmail = Model.GetUserEmail();
+    var userBio = Model.GetBio();
+}
+
+@if (isUserLoggedIn)
+{
+    <p>Welcome, you are logged in.</p>
+    <p>User Name: @userName</p>
+    <p>User Email: @userEmail</p>
+    <p>User Bio : @userBio</p>
+}
+else
+{
+    <p>You are not logged in.</p>
+}

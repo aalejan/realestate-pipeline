@@ -1,0 +1,36 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="container-fluid" style="height : 100vh">
+    <div class="row h-100 align-items-middle">
+        <!-- Left Side for Agent -->
+        <div class="col-md-6 d-flex align-items-center justify-content-center bg-light">
+            <div class="text-center">
+                <h2>Are You an Agent?</h2>
+                <form method="get" asp-page="/AgentRegistration">
+                    <button type="submit" class="btn btn-primary">I'm an Agent</button>
+                </form>
+                <p>
+                    <a href="/AgentLogin">Have an account?</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Side for Client -->
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+            <div class="text-center">
+                <h2>Are You a Client?</h2>
+                <form method="get" asp-page="/Client_Form">
+                    <button type="submit" class="btn btn-secondary">I'm a Client</button>
+                </form>
+                <p>
+                    <a href="/ClientRegistration">Create client account. </a>
+                </p>
+               
+            </div>
+        </div>
+    </div>
+</div>

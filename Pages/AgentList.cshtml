@@ -1,0 +1,44 @@
+﻿@page
+@model RealEstatePipeline.Pages.AgentListModel
+@{
+
+}
+
+<h2>Agent List</h2>
+
+<form class="mb-4" method="get">
+    <input type="text" name="searchQuery" placeholder="Search agents..." />
+    <button type="submit">Search</button>
+</form>
+
+<form class="mb-4" method="post">
+    <button type="submit" class="btn btn-primary">Find Best Matched Agents</button>
+</form>
+
+@if (Model.MatchedAgents != null)
+{
+    foreach (var agentMatch in Model.MatchedAgents)
+    {
+        <div>
+            <p>@agentMatch.Agent.UserName - Match Score: @agentMatch.MatchScore</p>
+            <!-- Display other details of the agent -->
+        </div>
+    }
+}
+
+@if (Model.Agents != null && Model.Agents.Count > 0)
+{
+    <ul class="list-group">
+        @foreach (var agent in Model.Agents)
+        {
+            <li class="list-group-item">
+                <a href="/AgentDetails/@agent.Id" class="list-group-item list-group-item-action">@agent.UserName (@agent.Email)</a>
+                <!-- Display other agent details as needed -->
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No agents found.</p>
+}

@@ -1,0 +1,38 @@
+﻿@page
+@model RealEstatePipeline.Pages.AgentDashboardModel
+@{
+    var isUserLoggedIn = Model.IsUserLoggedIn();
+    var userName = Model.GetUserName();
+    var userEmail = Model.GetUserEmail();
+    var userBio = Model.GetBio();
+    var userId = Model.UserId; // Retrieve the user ID
+}
+
+@if (isUserLoggedIn)
+{
+    if(Model.IsAgent)
+    {
+        <!-- Link to the EditAgent page -->
+        <div class="d-flex justify-content-between align-items-center">
+            <a asp-page="/EditAgent" asp-route-id="@userId" class="btn btn-primary">Edit My Profile</a>
+            <form method="post" asp-page-handler="Logout">
+                <button type="submit" class="btn btn-warning">Logout</button>
+            </form>
+        </div>
+
+       
+        <p>Welcome, you are logged in.</p>
+    <p>User Name: @userName</p>
+    <p>User Email: @userEmail</p>
+        <p>User Bio : @userBio</p>
+    }
+    else
+    {
+        <p>You are not an agent.</p>
+    }
+
+}
+else
+{
+    <p>You are not logged in.</p>
+}

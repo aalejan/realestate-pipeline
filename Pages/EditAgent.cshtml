@@ -1,0 +1,119 @@
+﻿@page
+@model RealEstatePipeline.Pages.EditAgentModel
+
+<h2>Edit Agent</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="AgentEdit.Id" />
+
+    <!-- FirstName -->
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="AgentEdit.FirstName">First Name</label>
+        <input asp-for="AgentEdit.FirstName" class="form-control" />
+        <span asp-validation-for="AgentEdit.FirstName" class="text-danger"></span>
+    </div>
+
+    <!-- LastName -->
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="AgentEdit.LastName">Last Name</label>
+        <input asp-for="AgentEdit.LastName" class="form-control" />
+        <span asp-validation-for="AgentEdit.LastName" class="text-danger"></span>
+    </div>
+
+    <!-- Email -->
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="AgentEdit.Email">Email</label>
+        <input asp-for="AgentEdit.Email" class="form-control" />
+        <span asp-validation-for="AgentEdit.Email" class="text-danger"></span>
+    </div>
+
+    <!-- Years of Experience -->
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="AgentEdit.YearsOfExperience">Years of Experience</label>
+        <input asp-for="AgentEdit.YearsOfExperience" type="number" class="form-control" />
+    </div>
+
+    <!-- Profile Description -->
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="AgentEdit.ProfileDescription">Profile Description</label>
+        <textarea asp-for="AgentEdit.ProfileDescription" class="form-control"></textarea>
+    </div>
+
+    <!-- Location Preference -->
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="AgentEdit.LocationPreference">Location Specialization</label>
+        <textarea asp-for="AgentEdit.LocationPreference" class="form-control"></textarea>
+    </div>
+
+    <!-- Preferred Communication Method -->
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="AgentEdit.PreferredCommunicationMethod">Preferred Communication Method</label>
+        <select asp-for="AgentEdit.PreferredCommunicationMethod" class="form-control">
+            <option value="">Select a method</option>
+            <option value="Email">Email</option>
+            <option value="Phone">Phone</option>
+            <option value="Text">Text</option>
+            <!-- Add other options as necessary -->
+        </select>
+    </div>
+
+    <!-- Property Specialization Checkboxes -->
+    <div class="mb-4">
+        <label class="fw-bold">Property Specialization</label>
+        <div class="checkbox">
+            <label asp-for="AgentEdit.IsResidential">Residential</label>
+            <input asp-for="AgentEdit.IsResidential" />
+        </div>
+        <!-- Repeat for other property types -->
+    </div>
+
+    <!-- Language Checkboxes -->
+    <div class="mb-4">
+        <label class="fw-bold">Languages Spoken</label>
+        <div class="checkbox">
+            <label asp-for="AgentEdit.SpeaksEnglish">English</label>
+            <input asp-for="AgentEdit.SpeaksEnglish" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="AgentEdit.SpeaksSpanish">Spanish</label>
+            <input asp-for="AgentEdit.SpeaksSpanish" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="AgentEdit.SpeaksMandarin">Mandarin</label>
+            <input asp-for="AgentEdit.SpeaksMandarin" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="AgentEdit.SpeaksFrench">French</label>
+            <input asp-for="AgentEdit.SpeaksFrench" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="AgentEdit.SpeaksArabic">Arabic</label>
+            <input asp-for="AgentEdit.SpeaksArabic" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="AgentEdit.SpeaksRussian">Russian</label>
+            <input asp-for="AgentEdit.SpeaksRussian" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="AgentEdit.SpeaksPortuguese">Portuguese</label>
+            <input asp-for="AgentEdit.SpeaksPortuguese" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="AgentEdit.SpeaksGerman">German</label>
+            <input asp-for="AgentEdit.SpeaksGerman" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="AgentEdit.SpeaksJapanese">Japanese</label>
+            <input asp-for="AgentEdit.SpeaksJapanese" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="AgentEdit.SpeaksHindi">Hindi</label>
+            <input asp-for="AgentEdit.SpeaksHindi" type="checkbox" />
+        </div>
+        <!-- Repeat for other languages -->
+    </div>
+
+    <!-- Additional fields can be added here -->
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
