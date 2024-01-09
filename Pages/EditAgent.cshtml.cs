@@ -73,6 +73,8 @@ namespace RealEstatePipeline.Pages
             return Page();
         }
 
+         
+
         public async Task<IActionResult> OnPostAsync()
         {
             _logger.LogInformation("Starting to update agent.");
@@ -101,29 +103,8 @@ namespace RealEstatePipeline.Pages
                 agentToUpdate.ProfileDescription = AgentEdit.ProfileDescription;
                 agentToUpdate.PreferredCommunicationMethod = AgentEdit.PreferredCommunicationMethod;
 
-                // Property types
-                var propertyTypes = new List<string>();
-                if (AgentEdit.IsResidential) propertyTypes.Add("Residential");
-                if (AgentEdit.IsCommercial) propertyTypes.Add("Commercial");
-                if (AgentEdit.IsIndustrial) propertyTypes.Add("Industrial");
-                if (AgentEdit.IsLand) propertyTypes.Add("Land");
-                if (AgentEdit.IsSpecialPurpose) propertyTypes.Add("Special Purpose");
-                agentToUpdate.PropertyTypes = string.Join(",", propertyTypes);
 
-                // Languages
-                var selectedLanguages = new List<string>();
-                if (AgentEdit.SpeaksEnglish) selectedLanguages.Add("English");
-                if (AgentEdit.SpeaksSpanish) selectedLanguages.Add("Spanish");
-                if (AgentEdit.SpeaksMandarin) selectedLanguages.Add("Mandarin");
-                if (AgentEdit.SpeaksFrench) selectedLanguages.Add("French");
-                if (AgentEdit.SpeaksArabic) selectedLanguages.Add("Arabic");
-                if (AgentEdit.SpeaksRussian) selectedLanguages.Add("Russian");
-                if (AgentEdit.SpeaksPortuguese) selectedLanguages.Add("Portuguese");
-                if (AgentEdit.SpeaksGerman) selectedLanguages.Add("German");
-                if (AgentEdit.SpeaksJapanese) selectedLanguages.Add("Japanese");
-                if (AgentEdit.SpeaksHindi) selectedLanguages.Add("Hindi");
-                // Add other languages as needed
-                agentToUpdate.PrimaryLanguage = string.Join(",", selectedLanguages);
+                ParseLanguages(AgentEdit, agentToUpdate);
 
                 var updateResult = await _userManager.UpdateAsync(agentToUpdate);
                 if (updateResult.Succeeded)
@@ -145,6 +126,27 @@ namespace RealEstatePipeline.Pages
             }
 
             return Page();
+        }
+
+        private void ParseLanguages(InputModel model, Agent_Info agent)
+        {
+            string[] languages = new[] { "English", "Spanish", "Mandarin", "French", "Arabic", "Russian", "Portuguese", "German", "Japanese", "Hindi" };
+            var selectedLanguages = new List<string>();
+
+            
+            foreach (var language in languages)
+            {
+                //GetType finds out the model type (InputModel) and then allows you to get property bc it knows it's InputModel
+                var property = model.GetType().GetProperty($"Speaks{language}");
+                if (property != null && (bool)property.GetValue(model))
+                {
+                    selectedLanguages.Add(language);
+                }
+            }
+
+            agent.PrimaryLanguage = string.Join(",", selectedLanguages);
+            
+
         }
 
         public class InputModel
