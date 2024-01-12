@@ -1,4 +1,100 @@
 ﻿@page
 @model RealEstatePipeline.Pages.EditClientModel
-@{
-}
+
+<h2>Edit Client</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="ClientInput.Id" />
+
+    <!-- FirstName -->
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="ClientInput.FirstName">First Name</label>
+        <input asp-for="ClientInput.FirstName" class="form-control" />
+        <span asp-validation-for="ClientInput.FirstName" class="text-danger"></span>
+    </div>
+
+    <!-- LastName -->
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="ClientInput.LastName">Last Name</label>
+        <input asp-for="ClientInput.LastName" class="form-control" />
+        <span asp-validation-for="ClientInput.LastName" class="text-danger"></span>
+    </div>
+
+    <!-- Location Preference -->
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="ClientInput.LocationPreference">Location Preference</label>
+        <input asp-for="ClientInput.LocationPreference" class="form-control" />
+        <span asp-validation-for="ClientInput.LocationPreference" class="text-danger"></span>
+    </div>
+
+    <!-- Profile Description -->
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="ClientInput.ProfileDescription">Profile Description</label>
+        <textarea asp-for="ClientInput.ProfileDescription" class="form-control"></textarea>
+    </div>
+
+    <!-- Preferred Communication Method -->
+    <div class="mb-4">
+        <label class="fw-bold" asp-for="ClientInput.PreferredCommunicationMethod">Preferred Communication Method</label>
+        <select asp-for="ClientInput.PreferredCommunicationMethod" class="form-control">
+            <option value="">Select a method</option>
+            <option value="Email">Email</option>
+            <option value="Phone">Phone</option>
+            <option value="Text">Text</option>
+            <!-- Add other options as necessary -->
+        </select>
+    </div>
+
+    <!-- Language Checkboxes -->
+    <!-- Repeat this section for each language as in the Agent Edit form -->
+    <!-- Language Checkboxes -->
+    <div class="mb-4">
+        <label class="fw-bold">Languages Spoken</label>
+        <div class="checkbox">
+            <label asp-for="ClientInput.SpeaksEnglish">English</label>
+            <input asp-for="ClientInput.SpeaksEnglish" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="ClientInput.SpeaksSpanish">Spanish</label>
+            <input asp-for="ClientInput.SpeaksSpanish" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="ClientInput.SpeaksMandarin">Mandarin</label>
+            <input asp-for="ClientInput.SpeaksMandarin" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="ClientInput.SpeaksFrench">French</label>
+            <input asp-for="ClientInput.SpeaksFrench" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="ClientInput.SpeaksArabic">Arabic</label>
+            <input asp-for="ClientInput.SpeaksArabic" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="ClientInput.SpeaksRussian">Russian</label>
+            <input asp-for="ClientInput.SpeaksRussian" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="ClientInput.SpeaksPortuguese">Portuguese</label>
+            <input asp-for="ClientInput.SpeaksPortuguese" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="ClientInput.SpeaksGerman">German</label>
+            <input asp-for="ClientInput.SpeaksGerman" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="ClientInput.SpeaksJapanese">Japanese</label>
+            <input asp-for="ClientInput.SpeaksJapanese" type="checkbox" />
+        </div>
+        <div class="checkbox">
+            <label asp-for="ClientInput.SpeaksHindi">Hindi</label>
+            <input asp-for="ClientInput.SpeaksHindi" type="checkbox" />
+        </div>
+        <!-- Repeat for other languages if necessary -->
+    </div>
+
+
+    <!-- Additional fields can be added here, if necessary -->
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
