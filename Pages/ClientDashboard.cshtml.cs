@@ -17,6 +17,10 @@ namespace RealEstatePipeline.Pages
 
         public bool IsClient {  get; set; }
         public string UserId {  get; set; }
+        public List<string> PrimaryLanguages { get; private set; }
+
+
+        public ClientRegistration Client {  get; set; }
 
         public ClientDashboardModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<AgentRegistrationModel> logger)
         {
@@ -54,17 +58,36 @@ namespace RealEstatePipeline.Pages
         }
 
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
            
-                var user = await _userManager.GetUserAsync(User);
+                var user = await _userManager.GetUserAsync(User) as ClientRegistration;
                 if (user != null)
                 {
                     IsClient = await _userManager.IsInRoleAsync(user, "Client");
                     UserId = user.Id;
+                    
+
+                Client = new ClientRegistration
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    MaximumBudget = user.MaximumBudget,
+                    MinimumBudget = user.MinimumBudget,
+                    ProfileDescription = user.ProfileDescription,
+                    PrimaryLanguage = user.PrimaryLanguage,
+                    LocationPreference = user.LocationPreference,
+                    PreferredCommunicationMethod = user.PreferredCommunicationMethod,
+                    PropertyTypes = user.PropertyTypes
+
+                };
                 }
-           
+            return Page();
            
         }
+
+
     }
+
 }
