@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RealEstatePipeline.Model;
+using System.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RealEstatePipeline.Pages
 {
@@ -10,14 +12,17 @@ namespace RealEstatePipeline.Pages
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ILogger<AgentRegistrationModel> _logger;
+
 
         public bool IsClient {  get; set; }
         public string UserId {  get; set; }
 
-        public ClientDashboardModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public ClientDashboardModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<AgentRegistrationModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _logger = logger;
         }
 
         public async Task<IActionResult> OnPostLogoutAsync()
@@ -51,12 +56,15 @@ namespace RealEstatePipeline.Pages
 
         public async Task OnGetAsync()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                IsClient = await _userManager.IsInRoleAsync(user, "Client");
-                UserId = user.Id;
-            }
+           
+                var user = await _userManager.GetUserAsync(User);
+                if (user != null)
+                {
+                    IsClient = await _userManager.IsInRoleAsync(user, "Client");
+                    UserId = user.Id;
+                }
+           
+           
         }
     }
 }

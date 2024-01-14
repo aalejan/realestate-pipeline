@@ -25,7 +25,7 @@ namespace RealEstatePipeline.Pages
 
             // Get the currently authenticated user
             var currentUser = await _userManager.GetUserAsync(User);
-            if (currentUser == null || !await _userManager.IsInRoleAsync(currentUser, "Agent"))
+            if (currentUser == null || !await _userManager.IsInRoleAsync(currentUser, "Client"))
             {
                 return RedirectToPage("/Error");
             }
@@ -34,7 +34,7 @@ namespace RealEstatePipeline.Pages
 
             if (Client == null)
             {
-                return RedirectToPage("/Error");
+                return RedirectToPage("/Success");
             }
 
             ClientInput = new InputModel
