@@ -2,10 +2,10 @@
 @model RealEstatePipeline.Pages.AgentDashboardModel
 @{
     var isUserLoggedIn = Model.IsUserLoggedIn();
-    var userName = Model.GetUserName();
-    var userEmail = Model.GetUserEmail();
-    var userBio = Model.GetBio();
+    
     var userId = Model.UserId; // Retrieve the user ID
+
+    var primaryLanguages = Model.Agent.PrimaryLanguage.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 }
 
 @if (isUserLoggedIn)
@@ -22,9 +22,20 @@
 
        
         <p>Welcome, you are logged in.</p>
-    <p>User Name: @userName</p>
-    <p>User Email: @userEmail</p>
-        <p>User Bio : @userBio</p>
+    <p> Name: @Model.Agent.FirstName @Model.Agent.LastName
+    </p>
+    <p>User Email: @Model.Agent.Email</p>
+        <p>User Bio : @Model.Agent.ProfileDescription</p>
+        <p>Language(s)</p>
+        @if (primaryLanguages.Any())
+        {
+            <ul>
+                @foreach (var language in primaryLanguages)
+                {
+                    <li>@language</li>
+                }
+            </ul>
+        }
     }
     else
     {

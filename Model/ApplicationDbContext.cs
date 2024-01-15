@@ -36,6 +36,12 @@ namespace RealEstatePipeline.Model
        .HasValue<Agent_Info>("Agent")
        .HasValue<ClientRegistration>("Client");
 
+            // Define the one-to-many relationship between Agent and Ratings
+            modelBuilder.Entity<Agent_Info>()
+                .HasMany(a => a.AgentRatings)
+                .WithOne(r => r.Agent)
+                .HasForeignKey(r => r.AgentId);
+
 
         }
 

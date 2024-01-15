@@ -20,6 +20,11 @@ namespace RealEstatePipeline.Pages
 
         public Agent_Info Agent { get; set; }
 
+       //Write a method that allows client to give an agent a rating. Only client can do this. Users are stored using identity user.
+
+
+
+
         public async Task<IActionResult> OnGetAsync(string id)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);

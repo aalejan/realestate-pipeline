@@ -47,7 +47,6 @@ namespace RealEstatePipeline.Pages
                     Ratings = user.Ratings,
                     Email = user.Email,
 
-
                 };
             }
         }
