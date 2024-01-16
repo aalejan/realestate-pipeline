@@ -14,16 +14,33 @@ namespace RealEstatePipeline
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add this line to load user secrets in development environment
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Configuration.AddUserSecrets<Program>();
+            }
+
             // Retrieve the password from environment variables
-            var dbPassword = builder.Configuration["DB_PASSWORD"];
-            var dbServer = builder.Configuration["DB_SERVER"];
+            var dbPassword = builder.Configuration["Database:Password"];
+            var dbServer = builder.Configuration["Database:Server"];
+
+
+            // Ensure that you have the values before continuing
+            if (string.IsNullOrEmpty(dbPassword) || string.IsNullOrEmpty(dbServer))
+            {
+                // Handle the case where necessary configuration is missing
+                throw new InvalidOperationException("Database configuration is missing.");
+            }
+
 
 
             // Build the connection string
             var defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            var connectionString = $"{defaultConnectionString};Password={dbPassword};Server={dbServer};";
+            var connectionString = $"Server={dbServer};{defaultConnectionString};Password={dbPassword};";
 
-           
+
+
+            System.Diagnostics.Debug.WriteLine(connectionString);
 
 
             // Add services to the container.
@@ -57,6 +74,7 @@ namespace RealEstatePipeline
             }
             else
             {
+                System.Diagnostics.Debug.WriteLine("In development mode");  
                 app.UseDeveloperExceptionPage();
             }
 

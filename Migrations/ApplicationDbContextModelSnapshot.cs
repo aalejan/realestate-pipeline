@@ -189,7 +189,7 @@ namespace RealEstatePipeline.Migrations
 
                     b.HasIndex("AgentId");
 
-                    b.ToTable("AgentRating");
+                    b.ToTable("AgentRatings");
                 });
 
             modelBuilder.Entity("RealEstatePipeline.Model.ApplicationUser", b =>

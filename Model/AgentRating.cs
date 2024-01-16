@@ -15,7 +15,7 @@
         public string Comments { get; set; }
 
         // Date-time stamp for when the rating was given
-        public DateTimeOffset RatingDate { get; set; } = DateTimeOffset.Now;
+        public DateTimeOffset RatingDate { get; set; }
     }
 
 }

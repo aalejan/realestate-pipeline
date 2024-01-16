@@ -12,8 +12,8 @@ using RealEstatePipeline.Model;
 namespace RealEstatePipeline.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240102185751_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240115163912_initialCreate")]
+    partial class initialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -160,6 +160,39 @@ namespace RealEstatePipeline.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("RealEstatePipeline.Model.AgentRating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AgentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Comments")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("RatingDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AgentId");
+
+                    b.ToTable("AgentRatings");
                 });
 
             modelBuilder.Entity("RealEstatePipeline.Model.ApplicationUser", b =>
@@ -367,6 +400,22 @@ namespace RealEstatePipeline.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("RealEstatePipeline.Model.AgentRating", b =>
+                {
+                    b.HasOne("RealEstatePipeline.Model.Agent_Info", "Agent")
+                        .WithMany("AgentRatings")
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Agent");
+                });
+
+            modelBuilder.Entity("RealEstatePipeline.Model.Agent_Info", b =>
+                {
+                    b.Navigation("AgentRatings");
                 });
 #pragma warning restore 612, 618
         }

@@ -17,6 +17,7 @@ namespace RealEstatePipeline.Model
 
         // DbSet properties for your entities here
         public DbSet<Client_Info> RealEstateInquiries { get; set; }
+        public DbSet<AgentRating> AgentRatings { get; set; }
 
      
 
