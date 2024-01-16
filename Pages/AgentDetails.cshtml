@@ -1,47 +1,68 @@
 ﻿@page "{id}"
 @model RealEstatePipeline.Pages.AgentDetailsModel
-@{
-}
 
-
-<h2>Agent Details</h2>
+<h2 class="mb-3">Agent Details</h2>
 
 <!-- Display agent details -->
-<p>Name: @Model.Agent.UserName</p>
-<p>Email: @Model.Agent.Email</p>
-<p>Bio: @Model.Agent.ProfileDescription</p>
-<h3>Ratings</h3>
+<div class="card mb-4">
+    <div class="card-body">
+        <h3 class="card-title">@Model.Agent.FirstName @Model.Agent.LastName</h3>
+        <p class="card-text"><strong>Email:</strong> @Model.Agent.Email</p>
+        <p class="card-text"><strong>Bio:</strong> @Model.Agent.ProfileDescription</p>
+    </div>
+</div>
+
+<h3 class="mb-3 text-primary">Ratings</h3>
 @if (Model.AgentRatings != null && Model.AgentRatings.Any())
 {
-    <ul>
+    <div class="list-group">
         @foreach (var rating in Model.AgentRatings)
         {
-            <li>
-                Rating: @rating.Rating - Comment: @rating.Comments - Date: @rating.RatingDate.ToString("yyyy-MM-dd")
-            </li>
+            <div class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <div>
+                        @for (int i = 0; i < 5; i++)
+                        {
+                            <i class="@(i < rating.Rating ? "fas" : "far") fa-star text-warning"></i>
+                        }
+                        <span class="text-success ml-2">(@rating.Rating)</span>
+                    </div>
+                    <small class="text-secondary">@rating.RatingDate.ToString("yyyy-MM-dd")</small>
+                </div>
+                <p class="mb-1">@rating.Comments</p>
+            </div>
         }
-    </ul>
+    </div>
 }
 else
 {
     <p>No ratings available for this agent.</p>
 }
-<!-- Add more details as needed -->
+
+<!-- Rating form for clients -->
 @if (User.IsInRole("Client"))
 {
-    <form method="post" asp-page-handler="RateAgent">
-        <input type="hidden" asp-for="AgentId" />
-        <label for="newRating">Rating (1-5):</label>
-        <select id="newRating" asp-for="NewRating">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <!-- Add options for 2, 3, 4, 5 -->
-        </select>
-        <label for="newComment">Comments:</label>
-        <textarea id="newComment" asp-for="NewComment"></textarea>
-        <input type="submit" value="Rate Agent" />
-    </form>
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Rate This Agent</h5>
+            <form method="post" asp-page-handler="RateAgent">
+                <input type="hidden" asp-for="AgentId" />
+                <div class="form-group">
+                    <label for="newRating">Rating (1-5):</label>
+                    <select id="newRating" asp-for="NewRating" class="form-control">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="newComment">Comments:</label>
+                    <textarea id="newComment" asp-for="NewComment" class="form-control"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Rating</button>
+            </form>
+        </div>
+    </div>
 }
