@@ -10,6 +10,22 @@
 <p>Name: @Model.Agent.UserName</p>
 <p>Email: @Model.Agent.Email</p>
 <p>Bio: @Model.Agent.ProfileDescription</p>
+<h3>Ratings</h3>
+@if (Model.AgentRatings != null && Model.AgentRatings.Any())
+{
+    <ul>
+        @foreach (var rating in Model.AgentRatings)
+        {
+            <li>
+                Rating: @rating.Rating - Comment: @rating.Comments - Date: @rating.RatingDate.ToString("yyyy-MM-dd")
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No ratings available for this agent.</p>
+}
 <!-- Add more details as needed -->
 @if (User.IsInRole("Client"))
 {

@@ -20,6 +20,8 @@ namespace RealEstatePipeline.Pages
 
         public Agent_Info Agent { get; set; }
 
+        public List<AgentRating> AgentRatings { get; set; }
+
         [BindProperty]
         public string AgentId { get; set; } // This will be bound to the hidden input in the form
 
@@ -73,6 +75,11 @@ namespace RealEstatePipeline.Pages
             {
                 Agent = user as Agent_Info;
                 AgentId = Agent.Id; // Set the AgentId for the form
+
+                // Retrieve ratings for the agent
+                AgentRatings = await _context.AgentRatings
+                                            .Where(r => r.AgentId == id)
+                                            .ToListAsync();
             }
 
             if (Agent == null)
