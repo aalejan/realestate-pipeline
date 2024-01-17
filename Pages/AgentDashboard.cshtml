@@ -19,7 +19,7 @@
                         <div class="card-body pb-0">
                             <div class="row align-items-center">
                                 <div class="col-md-3">
-                                    <div class="text-center border-end">
+                                    <div class="text-center border-end p-3">
                                         @if (Model.Agent?.ProfilePicture != null)
                                         {
                                             <img class="img-fluid avatar-xxl rounded-circle" src="@Url.Page("AgentDashboard", "ProfilePicture", new { userId = Model.UserId })" alt="Agent Profile Picture" />
@@ -29,6 +29,10 @@
                                             <!-- Display a default image if no profile picture is set -->
                                             <img class="img-fluid avatar-xxl rounded-circle" src="path-to-default-image.jpg" alt="Default Profile Picture" />
                                         }
+                                        <!-- Edit Profile Button -->
+                                        <a asp-page="/EditAgent" asp-route-id="@Model.UserId" class="btn btn-primary mt-3">Edit My Profile</a>
+
+                                       
                                         <h4 class="text-primary font-size-20 mt-3 mb-2">@Model.Agent.FirstName @Model.Agent.LastName</h4>
                                         <h5 class="text-muted font-size-13 mb-0">Real Estate Agent</h5>
                                     </div>
@@ -79,6 +83,10 @@
                     </div><!-- end card -->
                     <!-- Additional personal detail cards can be added here -->
                 </div><!-- end col -->
+                <!-- Logout Button -->
+                <form class="mt-4" method="post" asp-page-handler="Logout">
+                    <button type="submit" class="btn btn-warning">Logout</button>
+                </form>
             </div><!-- end row -->
         </div>
 

@@ -4,11 +4,34 @@
 <h2 class="mb-3">Agent Details</h2>
 
 <!-- Display agent details -->
-<div class="card mb-4">
-    <div class="card-body">
-        <h3 class="card-title">@Model.Agent.FirstName @Model.Agent.LastName</h3>
-        <p class="card-text"><strong>Email:</strong> @Model.Agent.Email</p>
-        <p class="card-text"><strong>Bio:</strong> @Model.Agent.ProfileDescription</p>
+<!-- Display agent details -->
+<div class="row align-items-center">
+    <!-- Profile Picture Column -->
+    <div class="col-md-4 text-center mb-4 mb-md-0">
+        @if (Model.Agent?.ProfilePicture != null)
+        {
+            <img class="img-fluid rounded-circle" src="@Url.Page("AgentDashboard", "ProfilePicture", new { userId = Model.Agent.Id })" alt="Agent Profile Picture" style="max-width: 200px;" />
+        }
+        else
+        {
+            <!-- Display a default image if no profile picture is set -->
+            <i class="fas fa-user-circle fa-8x text-secondary"></i>
+        }
+    </div>
+
+    <!-- Agent Information Column -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">@Model.Agent.FirstName @Model.Agent.LastName</h3>
+                <p class="card-text"><strong>Email:</strong> @Model.Agent.Email</p>
+                <p class="card-text"><strong>Bio:</strong> @Model.Agent.ProfileDescription</p>
+                <p class="card-text"><strong>Experience:</strong> @Model.Agent.YearsOfExperience years</p>
+                <p class="card-text"><strong>Specialization:</strong> @Model.Agent.PropertyTypes</p>
+                <p class="card-text"><strong>Languages Spoken:</strong> @Model.Agent.PrimaryLanguage</p>
+                <!-- Additional properties can be added here -->
+            </div>
+        </div>
     </div>
 </div>
 
