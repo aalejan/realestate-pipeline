@@ -46,10 +46,24 @@ namespace RealEstatePipeline.Pages
                     YearsOfExperience = user.YearsOfExperience,
                     Ratings = user.Ratings,
                     Email = user.Email,
+                    ProfilePicture = user.ProfilePicture
 
                 };
             }
         }
+
+        public async Task<IActionResult> OnGetProfilePictureAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId) as Agent_Info;
+            if (user?.ProfilePicture != null)
+            {
+                return File(user.ProfilePicture, "image/jpeg"); // Adjust the content type as needed
+            }
+
+            // Return a default image or NotFound as appropriate
+            return File("~/images/default-profile.jpg", "image/jpeg"); // Example path to a default image
+        }
+
         public bool IsUserLoggedIn()
         {
             return User.Identity.IsAuthenticated;

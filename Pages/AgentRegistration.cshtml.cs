@@ -51,6 +51,7 @@ namespace RealEstatePipeline.Pages
 
             public string? PreferredCommunicationMethod { get; set; }
 
+            public IFormFile ProfilePicture { get; set; }
 
 
             public bool SpeaksEnglish { get; set; }
@@ -98,6 +99,17 @@ namespace RealEstatePipeline.Pages
 
                 var languagesSpoken = string.Join(",", selectedLanguages);
 
+                byte[] profilePictureData = null;
+                if (Input.ProfilePicture != null && Input.ProfilePicture.Length > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await Input.ProfilePicture.CopyToAsync(memoryStream);
+                        profilePictureData = memoryStream.ToArray();
+                    }
+                }
+
+
                 var agent = new Agent_Info
                 {
                     UserName = Input.Email,
@@ -109,7 +121,8 @@ namespace RealEstatePipeline.Pages
                     YearsOfExperience = Input.YearsOfExperience,
                     PropertyTypes = string.Join(",", propertyTypes),
                     PreferredCommunicationMethod = Input.PreferredCommunicationMethod,
-                    PrimaryLanguage = languagesSpoken
+                    PrimaryLanguage = languagesSpoken,
+                    ProfilePicture = profilePictureData
                 };
 
                 var result = await _userManager.CreateAsync(agent, Input.Password);

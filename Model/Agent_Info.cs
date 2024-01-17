@@ -16,5 +16,7 @@ namespace RealEstatePipeline.Model
         // Navigation property for ratings
         public virtual ICollection<AgentRating> AgentRatings { get; set; }
 
+        public byte[] ProfilePicture { get; set; }
+
     }
 }
