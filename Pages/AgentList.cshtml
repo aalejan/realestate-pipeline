@@ -21,19 +21,32 @@
                     <!-- Display Matched Agents -->
                     @if (Model.MatchedAgents != null)
                     {
-                        <div class="mb-4">
+                        <div class="table-responsive mb-4">
                             <h4>Matched Agents</h4>
-                            @foreach (var agentMatch in Model.MatchedAgents)
-                            {
-                                <div class="card mb-2">
-                                    <div class="card-body">
-                                        <h5 class="card-title">@agentMatch.Agent.UserName</h5>
-                                        <p class="card-text">Match Score: @agentMatch.MatchScore</p>
-                                        <!-- Display other details of the agent -->
-                                    </div>
-                                </div>
-                            }
+                            <table class="table">
+                                <thead class="small text-uppercase text-muted">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Match Score</th>
+                                        <th>Details</th>
+                                        <!-- Add more headers if needed -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var agentMatch in Model.MatchedAgents)
+                                    {
+                                        <tr class="align-middle">
+                                            <td>@agentMatch.Agent.FirstName @agentMatch.Agent.LastName</td>
+                                            <td>Match Score: @agentMatch.MatchScore</td>
+                                            <td>
+                                                <a href="/AgentDetails/@agentMatch.Agent.Id" class="btn btn-primary btn-sm">View Details</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
+
                     }
 
                     <!-- Display Agents -->
@@ -67,7 +80,7 @@
                             </table>
                         </div>
                     }
-                    else
+                    else if(Model.Agents == null && Model.MatchedAgents == null)
                     {
                         <p>No agents found.</p>
                     }
