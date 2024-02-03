@@ -32,7 +32,8 @@
                 @if (User.IsInRole("Client"))
                 {
                     <form method="post" asp-page-handler="ShareClientProfile">
-                        
+                        <input type="hidden" asp-for="AgentId" />
+                        <button type="submit" class="btn btn-primary mt-4">Share profile</button>
 
                     </form>
                 }

@@ -11,11 +11,13 @@ namespace RealEstatePipeline.Pages
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager; // UserManager to check roles
+        private readonly ILogger<AgentDetailsModel> _logger;
 
-        public AgentDetailsModel(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public AgentDetailsModel(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger<AgentDetailsModel> logger)
         {
             _context = context;
             _userManager = userManager;
+            _logger = logger;
         }
 
         public Agent_Info Agent { get; set; }
@@ -35,14 +37,20 @@ namespace RealEstatePipeline.Pages
 
         public async Task<IActionResult> OnPostShareClientProfileAsync()
         {
-           //share client profile with agent
-           var clientUser = await _userManager.GetUserAsync(User);
-            if (clientUser == null || !await _userManager.IsInRoleAsync(clientUser, "Client"))
+            _logger.LogInformation("Attempting to share client profile");
+
+            var clientUser = await _userManager.GetUserAsync(User);
+            if (clientUser == null)
             {
-                return Unauthorized(); // Only clients can rate
+                _logger.LogWarning("Failed to find the client user.");
+                return Unauthorized();
             }
 
-            //on button click, share client profile with agent
+            if (!await _userManager.IsInRoleAsync(clientUser, "Client"))
+            {
+                _logger.LogWarning("User {UserId} is not in the 'Client' role.", clientUser.Id);
+                return Unauthorized();
+            }
 
             var newSharedClient = new SharedClient
             {
@@ -51,8 +59,12 @@ namespace RealEstatePipeline.Pages
                 SharedDate = DateTimeOffset.UtcNow
             };
 
-            _context.SharedClients.Add(newSharedClient);
+            _logger.LogInformation("Sharing client profile with agent. ClientId: {ClientId}, AgentId: {AgentId}", clientUser.Id, AgentId);
 
+            _context.SharedClients.Add(newSharedClient);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Successfully shared client profile with agent.");
 
             return RedirectToPage(); // Or redirect to a confirmation/thank you page
         }
