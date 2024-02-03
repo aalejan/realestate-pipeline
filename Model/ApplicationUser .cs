@@ -2,6 +2,8 @@
 
 namespace RealEstatePipeline.Model
 {
+
+    //Shared properties for all users
     public class ApplicationUser : IdentityUser
     {
         public string FirstName { get; set; }

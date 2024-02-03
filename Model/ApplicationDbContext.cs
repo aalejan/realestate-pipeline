@@ -19,6 +19,8 @@ namespace RealEstatePipeline.Model
         public DbSet<Client_Info> RealEstateInquiries { get; set; }
         public DbSet<AgentRating> AgentRatings { get; set; }
 
+        public DbSet<SharedClient> SharedClients { get; set; }
+
      
 
 
@@ -40,6 +42,11 @@ namespace RealEstatePipeline.Model
             // Define the one-to-many relationship between Agent and Ratings
             modelBuilder.Entity<Agent_Info>()
                 .HasMany(a => a.AgentRatings)
+                .WithOne(r => r.Agent)
+                .HasForeignKey(r => r.AgentId);
+            // Define the one-to-many relationship between Agent and SharedClients
+            modelBuilder.Entity<Agent_Info>()
+                .HasMany(a => a.SharedClients)
                 .WithOne(r => r.Agent)
                 .HasForeignKey(r => r.AgentId);
 

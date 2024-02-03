@@ -29,6 +29,13 @@
                 <p class="card-text"><strong>Experience:</strong> @Model.Agent.YearsOfExperience years</p>
                 <p class="card-text"><strong>Specialization:</strong> @Model.Agent.PropertyTypes</p>
                 <p class="card-text"><strong>Languages Spoken:</strong> @Model.Agent.PrimaryLanguage</p>
+                @if (User.IsInRole("Client"))
+                {
+                    <form method="post" asp-page-handler="ShareClientProfile">
+                        
+
+                    </form>
+                }
                 <!-- Additional properties can be added here -->
             </div>
         </div>

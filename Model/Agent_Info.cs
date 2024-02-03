@@ -18,5 +18,7 @@ namespace RealEstatePipeline.Model
 
         public byte[] ProfilePicture { get; set; }
 
+        public virtual ICollection<SharedClient> SharedClients { get; set; }
+
     }
 }
