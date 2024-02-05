@@ -6,6 +6,7 @@
     var userId = Model.UserId; // Retrieve the user ID
 
     var primaryLanguages = Model.Agent.PrimaryLanguage.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+    var sharedClientProfile = Model.SharedClients;
 }
 
 @if (isUserLoggedIn)
@@ -60,6 +61,31 @@
                     <!-- Additional sections (e.g., Projects, Tasks) can be added here -->
                 </div><!-- end col -->
 
+                <!-- Languages Card -->
+                <div class="col-xl-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div>
+                                <h4 class="card-title mb-4">Client Inqueries</h4>
+                                @if (sharedClientProfile != null && sharedClientProfile.Any())
+                                {
+                                    <ul class="list-group list-group-flush">
+                                        @foreach (var sharedClient in sharedClientProfile)
+                                        {
+                                            <li class="list-group-item">@sharedClient.FirstName</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <p class="text-muted">No shared clients.</p>
+                                }
+                            </div>
+                        </div><!-- end card body -->
+                    </div><!-- end card -->
+                    <!-- Additional personal detail cards can be added here -->
+                </div><!-- end col -->
+                
                 <div class="col-xl-4">
                     <div class="card">
                         <div class="card-body">

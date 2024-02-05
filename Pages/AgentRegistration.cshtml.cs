@@ -51,7 +51,7 @@ namespace RealEstatePipeline.Pages
 
             public string? PreferredCommunicationMethod { get; set; }
 
-            public IFormFile ProfilePicture { get; set; }
+            public IFormFile? ProfilePicture { get; set; }
 
 
             public bool SpeaksEnglish { get; set; }
@@ -71,6 +71,8 @@ namespace RealEstatePipeline.Pages
             public bool IsSpecialPurpose { get; set; }
 
         }
+
+        
 
         public async Task<IActionResult> OnPostAsync()
         {

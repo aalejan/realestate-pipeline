@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RealEstatePipeline.Model;
+using RealEstatePipeline.Services;
 using System;
 using System.Data.SqlClient;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -61,7 +62,7 @@ namespace RealEstatePipeline
                 options.ExpireTimeSpan = TimeSpan.FromDays(30); // Example: User will be logged in for 30 days
                 options.SlidingExpiration = true; // Resets the cookie expiration time if the user is active
             });
-
+            builder.Services.AddScoped<ClientService>(); // Add this line
 
             var app = builder.Build();
 

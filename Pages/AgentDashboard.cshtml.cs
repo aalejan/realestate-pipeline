@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using RealEstatePipeline.Model;
+using RealEstatePipeline.Services;
 
 namespace RealEstatePipeline.Pages
 {
@@ -9,17 +11,29 @@ namespace RealEstatePipeline.Pages
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ApplicationDbContext _context;
+        private readonly ClientService _clientService;
+
         public bool IsAgent { get; private set; }
         public string UserId { get; private set; } // Property to store user ID
 
         public Agent_Info Agent { get; private set; }
+        public List<ClientRegistration> SharedClients { get; set; }
 
-        public AgentDashboardModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+
+        public AgentDashboardModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext context, ClientService clientService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
+            _clientService = clientService; 
         }
 
+        // Method to get client info, call this in your Razor view
+        public async Task<ApplicationUser> GetClientInfoAsync(string clientId)
+        {
+            return await _clientService.GetClientByIdAsync(clientId);
+        }
 
         public async Task<IActionResult> OnPostLogoutAsync()
         {
@@ -34,21 +48,24 @@ namespace RealEstatePipeline.Pages
                 IsAgent = await _userManager.IsInRoleAsync(user, "Agent");
                 UserId = user.Id; // Store the user ID
 
-                Agent = new Agent_Info
-                {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    ProfileDescription = user.ProfileDescription,
-                    PrimaryLanguage = user.PrimaryLanguage,
-                    PropertyTypes = user.PropertyTypes,
-                    PreferredCommunicationMethod = user.PreferredCommunicationMethod,
-                    LocationPreference = user.LocationPreference,
-                    YearsOfExperience = user.YearsOfExperience,
-                    Ratings = user.Ratings,
-                    Email = user.Email,
-                    ProfilePicture = user.ProfilePicture
+                // Retrieve shared clients for the agent
+                var sharedClients = await _context.SharedClients
+                                                   .Where(r => r.AgentId == UserId)
+                                                   .ToListAsync();
+                SharedClients = new List<ClientRegistration>(); // Initialize the list
 
-                };
+                foreach (var sharedClient in sharedClients)
+                {
+                    // Optionally, fetch and store detailed client information here
+                    var clientInfo = await GetClientInfoAsync(sharedClient.ClientId) as ClientRegistration;
+                    if (clientInfo != null)
+                    {
+                        //Add the client to the list
+                        SharedClients.Add(clientInfo);
+                    }
+                }
+
+                Agent = user;
             }
         }
 
