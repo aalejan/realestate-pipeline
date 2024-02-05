@@ -65,24 +65,29 @@
                 <div class="col-xl-4">
                     <div class="card">
                         <div class="card-body">
-                            <div>
-                                <h4 class="card-title mb-4">Client Inqueries</h4>
-                                @if (sharedClientProfile != null && sharedClientProfile.Any())
-                                {
-                                    <ul class="list-group list-group-flush">
-                                        @foreach (var sharedClient in sharedClientProfile)
-                                        {
-                                            <li class="list-group-item">@sharedClient.FirstName</li>
-                                        }
-                                    </ul>
-                                }
-                                else
-                                {
-                                    <p class="text-muted">No shared clients.</p>
-                                }
-                            </div>
+                            <h4 class="card-title mb-4">Client Inquiries</h4>
+                            @if (sharedClientProfile != null && sharedClientProfile.Any())
+                            {
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var sharedClient in sharedClientProfile)
+                                    {
+                                        <li class="list-group-item">
+                                            @sharedClient.FirstName
+                                            <!-- Trigger modal button -->
+                                            <button type="button" class="btn btn-primary btn-sm float-end" onclick="showClientDetails('@sharedClient.FirstName', '@sharedClient.Email')">
+                                                View Details
+                                            </button>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No shared clients.</p>
+                            }
                         </div><!-- end card body -->
                     </div><!-- end card -->
+                    <!-- end card -->
                     <!-- Additional personal detail cards can be added here -->
                 </div><!-- end col -->
                 
@@ -114,6 +119,27 @@
                     <button type="submit" class="btn btn-warning">Logout</button>
                 </form>
             </div><!-- end row -->
+            <!-- Client Details Modal -->
+            <div class="modal fade" id="clientDetailsModal" tabindex="-1" aria-labelledby="clientDetailsModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="clientDetailsModalLabel">Client Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Details will be inserted here -->
+                            <p id="clientName"></p>
+                            <p id="clientEmail"></p>
+                            <p id="clientOtherDetail"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- end container -->
@@ -130,4 +156,20 @@ else
     <div class="alert alert-warning" role="alert">
         You are not logged in.
     </div>
+}
+
+@section Scripts{
+    <script>
+        function showClientDetails(name, email) {
+            // Set the content of the modal
+            document.getElementById('clientName').innerText = 'Name: ' + name;
+            document.getElementById('clientEmail').innerText = 'Email: ' + email;
+           
+
+            // Show the modal
+            var myModal = new bootstrap.Modal(document.getElementById('clientDetailsModal'));
+            myModal.show();
+        }
+    </script>
+
 }
