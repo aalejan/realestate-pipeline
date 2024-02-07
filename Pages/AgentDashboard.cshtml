@@ -5,7 +5,7 @@
     
     var userId = Model.UserId; // Retrieve the user ID
 
-    var primaryLanguages = Model.Agent.PrimaryLanguage.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+    var primaryLanguages = Model?.Agent?.PrimaryLanguage?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
     var sharedClientProfile = Model.SharedClients;
 }
 
@@ -74,7 +74,7 @@
                                         <li class="list-group-item">
                                             @sharedClient.FirstName
                                             <!-- Trigger modal button -->
-                                            <button type="button" class="btn btn-primary btn-sm float-end" onclick="showClientDetails('@sharedClient.FirstName', '@sharedClient.Email')">
+                                            <button type="button" class="btn btn-primary btn-sm float-end" onclick="showClientDetails('@sharedClient.FirstName', '@sharedClient.LastName', '@sharedClient.Email', '@sharedClient.MaximumBudget', '@sharedClient.MinimumBudget', '@sharedClient.LocationPreference', '@sharedClient.PropertyTypes', '@sharedClient.PreferredCommunicationMethod')">
                                                 View Details
                                             </button>
                                         </li>
@@ -129,9 +129,16 @@
                         </div>
                         <div class="modal-body">
                             <!-- Details will be inserted here -->
-                            <p id="clientName"></p>
+                            <p id="clientFirstName"></p>
+                            <p id="clientLastName"></p>
                             <p id="clientEmail"></p>
-                            <p id="clientOtherDetail"></p>
+                            <p id="clientCommunication"></p>
+                            <p id="clientMax"></p>
+                            <p id="clientMin"></p>
+                            <p id="clientPreference"></p>
+                            <p id="clientPropTypes"></p>
+                
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -160,10 +167,24 @@ else
 
 @section Scripts{
     <script>
-        function showClientDetails(name, email) {
+        function showClientDetails(name, lastName, email, maxBudget = "", minBudget = "", preference ="", propTypes ="", communicationMethod = "") {
+            try {
             // Set the content of the modal
-            document.getElementById('clientName').innerText = 'Name: ' + name;
+                document.getElementById('clientFirstName').innerText = 'First name: ' + name;
+            document.getElementById('clientLastName').innerText = 'Last name: ' + lastName;
+            //follow this pattern for rest of details
+                document.getElementById('clientCommunication').innerText = 'Preferred communication method: ' + communicationMethod
             document.getElementById('clientEmail').innerText = 'Email: ' + email;
+
+            document.getElementById('clientMax').innerText = 'Max budget: ' + maxBudget
+            document.getElementById('clientMin').innerText = 'Min budget: ' + minBudget
+            document.getElementById('clientPreference').innerText = 'Location preference: ' + preference
+            document.getElementById('clientPropTypes').innerText = 'Property type of interest: ' + propTypes
+            }catch(e) {
+                console.log(e);
+            }
+          
+            
            
 
             // Show the modal
