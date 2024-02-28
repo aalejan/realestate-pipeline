@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RealEstatePipeline.Model;
 using RealEstatePipeline.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
+
 using System;
 using System.Data.SqlClient;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -24,7 +26,8 @@ namespace RealEstatePipeline
             // Retrieve the password from environment variables
             var dbPassword = builder.Configuration["Database:Password"];
             var dbServer = builder.Configuration["Database:Server"];
-
+            var emailApiKey = builder.Configuration["Email:ServiceApiKey"];
+            
 
             // Ensure that you have the values before continuing
             if (string.IsNullOrEmpty(dbPassword) || string.IsNullOrEmpty(dbServer))
@@ -38,10 +41,9 @@ namespace RealEstatePipeline
             // Build the connection string
             var defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             var connectionString = $"Server={dbServer};{defaultConnectionString};Password={dbPassword};";
+           
 
 
-
-            System.Diagnostics.Debug.WriteLine(connectionString);
 
 
             // Add services to the container.
@@ -54,8 +56,9 @@ namespace RealEstatePipeline
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-
-
+            // Register the EmailSender with the API key
+            builder.Services.AddSingleton<IEmailSender>(provider =>
+                new EmailSender(emailApiKey));
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
