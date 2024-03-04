@@ -38,12 +38,15 @@ namespace RealEstatePipeline.Pages
                     return RedirectToPage("./Success");
                 }
 
+                var isAgent = await _userManager.IsInRoleAsync(user, "Agent");
+                var isClient = await _userManager.IsInRoleAsync(user, "Client");
+
                 // Generate the reset password token
-               var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.Page(
                 "/Account/ResetPassword",
                 pageHandler: null,
-                values: new { userId = user.Id, code = code },
+                values: new { userId = user.Id, code = code, email = user.Email , userType = isAgent ? "Agent" : isClient ? "Client" : "Unknown" },
                 protocol: Request.Scheme);
 
                 System.Diagnostics.Debug.WriteLine(callbackUrl);

@@ -26,12 +26,17 @@ namespace RealEstatePipeline.Pages.Account
         [BindProperty]
         public string Code { get; set; }
 
+        [BindProperty]
+        public string UserType { get; set; }
+
+   
+
         public ResetPasswordModel(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
 
-        public IActionResult OnGet(string code = null)
+        public IActionResult OnGet(string code = null, string userType = null, string email = null)
         {
             if (code == null)
             {
@@ -40,6 +45,8 @@ namespace RealEstatePipeline.Pages.Account
             else
             {
                 Code = code;
+                UserType = userType;
+                Email = email;
                 return Page();
             }
         }
@@ -60,7 +67,9 @@ namespace RealEstatePipeline.Pages.Account
             var result = await _userManager.ResetPasswordAsync(user, Code, Password);
             if (result.Succeeded)
             {
-                return RedirectToPage("./ResetPasswordConfirmation");
+
+                System.Diagnostics.Debug.WriteLine("UserType in Post: " + UserType);
+                return RedirectToPage("./ResetPasswordConfirmation", new {userType = UserType});
             }
 
             foreach (var error in result.Errors)
