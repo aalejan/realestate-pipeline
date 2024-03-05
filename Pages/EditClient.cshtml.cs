@@ -34,11 +34,13 @@ namespace RealEstatePipeline.Pages
 
             if (Client == null)
             {
-                return RedirectToPage("/Success");
+                return RedirectToPage("/Error");
             }
 
             ClientInput = new InputModel
             {
+                Id = Client.Id,
+                Email = Client.Email,
                 FirstName = Client.FirstName,
                 LastName = Client.LastName,
                 LocationPreference = Client.LocationPreference,
@@ -66,7 +68,13 @@ namespace RealEstatePipeline.Pages
 
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Model state is invalid.");
+                foreach (var modelState in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        _logger.LogWarning($"Validation error: {error.ErrorMessage}");
+                    }
+                }
                 return Page();
             }
 
@@ -75,7 +83,7 @@ namespace RealEstatePipeline.Pages
                 var clientToUpdate = await _userManager.FindByIdAsync(ClientInput.Id) as ClientRegistration;
                 if (clientToUpdate == null)
                 {
-                    _logger.LogWarning($"Agent with ID {ClientInput.Id} not found.");
+                    _logger.LogWarning($"Client with ID {ClientInput.Id} not found.");
                     return NotFound();
                 }
 
@@ -107,7 +115,7 @@ namespace RealEstatePipeline.Pages
                 if (updateResult.Succeeded)
                 {
                     _logger.LogInformation($"Agent with ID {ClientInput.Id} updated successfully.");
-                    return RedirectToPage("/AgentDashboard");
+                    return RedirectToPage("/ClientDashboard");
                 }
 
                 foreach (var error in updateResult.Errors)
