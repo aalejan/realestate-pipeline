@@ -39,32 +39,41 @@ namespace RealEstatePipeline.Pages
         {
             _logger.LogInformation("Attempting to share client profile");
 
-            var clientUser = await _userManager.GetUserAsync(User);
-            if (clientUser == null)
+            try
             {
-                _logger.LogWarning("Failed to find the client user.");
-                return Unauthorized();
+                var clientUser = await _userManager.GetUserAsync(User);
+                if (clientUser == null)
+                {
+                    _logger.LogWarning("Failed to find the client user.");
+                    return Unauthorized();
+                }
+
+                if (!await _userManager.IsInRoleAsync(clientUser, "Client"))
+                {
+                    _logger.LogWarning("User {UserId} is not in the 'Client' role.", clientUser.Id);
+                    return Unauthorized();
+                }
+
+                var newSharedClient = new SharedClient
+                {
+                    ClientId = clientUser.Id,
+                    AgentId = AgentId,
+                    SharedDate = DateTimeOffset.UtcNow
+                };
+
+                _logger.LogInformation("Sharing client profile with agent. ClientId: {ClientId}, AgentId: {AgentId}", clientUser.Id, AgentId);
+
+                _context.SharedClients.Add(newSharedClient);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Successfully shared client profile with agent.");
+
             }
-
-            if (!await _userManager.IsInRoleAsync(clientUser, "Client"))
+            catch (Exception ex)
             {
-                _logger.LogWarning("User {UserId} is not in the 'Client' role.", clientUser.Id);
-                return Unauthorized();
+                _logger.LogError(ex, "Failed to share client profile");
+                return BadRequest("Failed to share client profile");
             }
-
-            var newSharedClient = new SharedClient
-            {
-                ClientId = clientUser.Id,
-                AgentId = AgentId,
-                SharedDate = DateTimeOffset.UtcNow
-            };
-
-            _logger.LogInformation("Sharing client profile with agent. ClientId: {ClientId}, AgentId: {AgentId}", clientUser.Id, AgentId);
-
-            _context.SharedClients.Add(newSharedClient);
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation("Successfully shared client profile with agent.");
 
             return RedirectToPage(); // Or redirect to a confirmation/thank you page
         }
@@ -72,28 +81,39 @@ namespace RealEstatePipeline.Pages
 
         public async Task<IActionResult> OnPostRateAgentAsync()
         {
-            var clientUser = await _userManager.GetUserAsync(User);
-            if (clientUser == null || !await _userManager.IsInRoleAsync(clientUser, "Client"))
+
+            try
             {
-                return Unauthorized(); // Only clients can rate
+                var clientUser = await _userManager.GetUserAsync(User);
+                if (clientUser == null || !await _userManager.IsInRoleAsync(clientUser, "Client"))
+                {
+                    return Unauthorized(); // Only clients can rate
+                }
+
+                if (NewRating < 1 || NewRating > 5)
+                {
+                    return BadRequest("Invalid rating value.");
+                }
+
+
+                var newRating = new AgentRating
+                {
+                    ClientId = clientUser.Id,
+                    AgentId = AgentId,
+                    Rating = NewRating,
+                    Comments = NewComment,
+                    RatingDate = DateTimeOffset.UtcNow
+                };
+                _context.AgentRatings.Add(newRating);
+                await _context.SaveChangesAsync();
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to rate agent");
+                return BadRequest("Failed to rate agent");
             }
 
-            if (NewRating < 1 || NewRating > 5)
-            {
-                return BadRequest("Invalid rating value.");
-            }
-            
-
-            var newRating = new AgentRating
-            {
-                ClientId = clientUser.Id,
-                AgentId = AgentId,
-                Rating = NewRating,
-                Comments = NewComment,
-                RatingDate = DateTimeOffset.UtcNow
-            };
-            _context.AgentRatings.Add(newRating);
-            await _context.SaveChangesAsync();
 
             // Optionally, recalculate and update the average rating for the agent
             // ...
@@ -102,27 +122,32 @@ namespace RealEstatePipeline.Pages
         }
         public async Task<IActionResult> OnGetAsync(string id)
         {
-
-
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
-
-            if (user != null && await _userManager.IsInRoleAsync(user, "Agent"))
+            try
             {
-                Agent = user as Agent_Info;
-                AgentId = Agent.Id; // Set the AgentId for the form
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
-                // Retrieve ratings for the agent
-                AgentRatings = await _context.AgentRatings
-                                            .Where(r => r.AgentId == id)
-                                            .ToListAsync();
+                if (user != null && await _userManager.IsInRoleAsync(user, "Agent"))
+                {
+                    Agent = user as Agent_Info;
+                    AgentId = Agent.Id; // Set the AgentId for the form
+
+                    // Retrieve ratings for the agent
+                    AgentRatings = await _context.AgentRatings
+                                                .Where(r => r.AgentId == id)
+                                                .ToListAsync();
+                }
+
+                if (Agent == null)
+                {
+                    return NotFound();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Error getting agent information: {ex.Message}");
             }
 
-
-
-            if (Agent == null)
-            {
-                return NotFound();
-            }
 
 
             return Page();

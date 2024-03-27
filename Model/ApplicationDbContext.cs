@@ -15,14 +15,16 @@ namespace RealEstatePipeline.Model
             // The body of the constructor is empty because all necessary configuration is done through the options parameter and handled by the base class.
         }
 
-        // DbSet properties for your entities here
+        // DbSet properties for your entities here (tables in db)
         public DbSet<Client_Info> RealEstateInquiries { get; set; }
         public DbSet<AgentRating> AgentRatings { get; set; }
 
         public DbSet<SharedClient> SharedClients { get; set; }
 
-     
 
+
+        //This method is invoked when the model for a derived context is initialized but not yet finalized, allowing for custom configuration using the Fluent API.
+        //It's the stage to define entity relationships, constraints, and configurations before the model is locked down and used by the framework.
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

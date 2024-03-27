@@ -42,43 +42,63 @@ namespace RealEstatePipeline.Pages
         }
         public async Task OnGetAsync()
         {
-            var user = await _userManager.GetUserAsync(User) as Agent_Info;
-            if (user != null)
+            try
             {
-                IsAgent = await _userManager.IsInRoleAsync(user, "Agent");
-                UserId = user.Id; // Store the user ID
-
-                // Retrieve shared clients for the agent
-                var sharedClients = await _context.SharedClients
-                                                   .Where(r => r.AgentId == UserId)
-                                                   .ToListAsync();
-                SharedClients = new List<ClientRegistration>(); // Initialize the list
-
-                foreach (var sharedClient in sharedClients)
+                var user = await _userManager.GetUserAsync(User) as Agent_Info;
+                if (user != null)
                 {
-                    // Optionally, fetch and store detailed client information here
-                    var clientInfo = await GetClientInfoAsync(sharedClient.ClientId) as ClientRegistration;
-                    if (clientInfo != null)
+                    IsAgent = await _userManager.IsInRoleAsync(user, "Agent");
+                    UserId = user.Id; // Store the user ID
+
+                    // Retrieve shared clients for the agent
+                    var sharedClients = await _context.SharedClients
+                                                       .Where(r => r.AgentId == UserId)
+                                                       .ToListAsync();
+                    SharedClients = new List<ClientRegistration>(); // Initialize the list
+
+                    foreach (var sharedClient in sharedClients)
                     {
-                        //Add the client to the list
-                        SharedClients.Add(clientInfo);
+                        // Optionally, fetch and store detailed client information here
+                        var clientInfo = await GetClientInfoAsync(sharedClient.ClientId) as ClientRegistration;
+                        if (clientInfo != null)
+                        {
+                            //Add the client to the list
+                            SharedClients.Add(clientInfo);
+                        }
                     }
+
+                    Agent = user;
                 }
 
-                Agent = user;
             }
+            catch(Exception ex)
+            {
+                throw new InvalidOperationException($"Error getting agent information: {ex.Message}");
+            }
+
+           
         }
 
         public async Task<IActionResult> OnGetProfilePictureAsync(string userId)
         {
-            var user = await _userManager.FindByIdAsync(userId) as Agent_Info;
-            if (user?.ProfilePicture != null)
+            try
             {
-                return File(user.ProfilePicture, "image/jpeg"); // Adjust the content type as needed
+                var user = await _userManager.FindByIdAsync(userId) as Agent_Info;
+                if (user?.ProfilePicture != null)
+                {
+                    return File(user.ProfilePicture, "image/jpeg"); // Adjust the content type as needed
+                }
+
+                // Return a default image or NotFound as appropriate
+                return File("~/images/default-profile.jpg", "image/jpeg"); // Example path to a default image
+
+            }
+            catch(Exception ex)
+            {
+                throw new InvalidOperationException($"Error getting profile picture: {ex.Message}");
             }
 
-            // Return a default image or NotFound as appropriate
-            return File("~/images/default-profile.jpg", "image/jpeg"); // Example path to a default image
+            
         }
 
         public bool IsUserLoggedIn()

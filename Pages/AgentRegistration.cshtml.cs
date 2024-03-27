@@ -10,6 +10,8 @@ namespace RealEstatePipeline.Pages
 {
     public class AgentRegistrationModel : PageModel
     {
+
+        
         private readonly UserManager<ApplicationUser> _userManager; // Use UserManager for Identity
         private readonly ILogger<AgentRegistrationModel> _logger;
         private readonly SignInManager<ApplicationUser> _signInManager;

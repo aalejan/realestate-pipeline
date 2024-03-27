@@ -11,11 +11,13 @@ namespace RealEstatePipeline.Pages
 
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager; // UserManager to check roles
+        private readonly ILogger<AgentListModel> _logger;
 
-        public AgentListModel(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public AgentListModel(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger<AgentListModel> logger)
         {
             _context = context;
             _userManager = userManager;
+            _logger = logger;
         }
 
         public IList<Agent_Info> Agents { get; private set; } = new List<Agent_Info>();
@@ -23,12 +25,22 @@ namespace RealEstatePipeline.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user != null && await _userManager.IsInRoleAsync(user, "Client"))
+
+            try
             {
-                var client = user as ClientRegistration;
-                MatchedAgents = await GetMatchedAgentsAsync(client);
+                var user = await _userManager.GetUserAsync(User);
+                if (user != null && await _userManager.IsInRoleAsync(user, "Client"))
+                {
+                    var client = user as ClientRegistration;
+                    MatchedAgents = await GetMatchedAgentsAsync(client);
+                }
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while trying to retrieve matched agents for the user.");
+
+            }
+
 
             return Page();
         }
