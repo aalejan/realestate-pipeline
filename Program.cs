@@ -41,9 +41,9 @@ namespace RealEstatePipeline
             // Build the connection string
             var defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             var connectionString = $"Server={dbServer};{defaultConnectionString};Password={dbPassword};";
-           
 
 
+            System.Diagnostics.Debug.WriteLine("This is the connection string" + connectionString);
 
 
             // Add services to the container.

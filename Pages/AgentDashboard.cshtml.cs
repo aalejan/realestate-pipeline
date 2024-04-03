@@ -101,6 +101,8 @@ namespace RealEstatePipeline.Pages
             
         }
 
+       // public async Task<IActionResult> onSharedClient
+
         public bool IsUserLoggedIn()
         {
             return User.Identity.IsAuthenticated;

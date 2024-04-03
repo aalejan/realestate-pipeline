@@ -66,6 +66,8 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title mb-4">Client Inquiries</h4>
+                            <!--button links to manage clients pagee-->
+                            <a asp-page="/ManageClients" class="btn btn-primary">Manage Clients</a>
                             @if (sharedClientProfile != null && sharedClientProfile.Any())
                             {
                                 <ul class="list-group list-group-flush">
