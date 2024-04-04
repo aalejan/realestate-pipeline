@@ -7,9 +7,10 @@
         <thead>
             <tr>
                 <th>Client Name</th>
-                <th>Has Found House</th>
+                <th> Contacted</th>
                 <th>Has Signed Contract</th>
-                <th>Is Contacted</th>
+                <th>Has Found House</th>
+                <th>Notes</th>
                 <!-- Add headers for other fields -->
             </tr>
         </thead>
@@ -22,15 +23,21 @@
                         <input type="hidden" asp-for="ClientUpdates[i].Id" value="@Model.SharedClients[i].SharedClient.Id" />
                     </td>
                     <td>
-                        <input type="checkbox" asp-for="ClientUpdates[i].HasFoundHouse" checked="@((Model.SharedClients[i].SharedClient.HasFoundHouse ? "true" : ""))" />
+                        <input type="checkbox" asp-for="ClientUpdates[i].IsContacted" />
+                    </td>
+
+                    <td>
+                        <input type="checkbox" asp-for="ClientUpdates[i].HasSignedContract" />
+                    </td>
+                    <td>
+                        <input type="checkbox" asp-for="ClientUpdates[i].HasFoundHouse" />
 
                     </td>
+
                     <td>
-                        <input type="checkbox" asp-for="ClientUpdates[i].HasSignedContract" checked="@((Model.SharedClients[i].SharedClient.HasSignedContract ? "true" : ""))" />
+                        <textarea asp-for="ClientUpdates[i].Notes" class="form-control"></textarea>
                     </td>
-                    <td>
-                        <input type="checkbox" asp-for="ClientUpdates[i].IsContacted" checked="@((Model.SharedClients[i].SharedClient.IsContacted ? "true" : ""))" />
-                    </td>
+
                     <!-- Add inputs for other editable fields -->
                 </tr>
             }

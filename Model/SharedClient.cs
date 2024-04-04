@@ -27,7 +27,7 @@
         public bool HasFoundHouse { get; set; }
 
         // Optionally, you can add a field to add notes by the agent about the client
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
 
     }
 }

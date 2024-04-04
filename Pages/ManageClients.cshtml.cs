@@ -29,11 +29,12 @@ namespace RealEstatePipeline.Pages
         [BindProperty]
         public List<ClientUpdateViewModel> ClientUpdates { get; set; }
 
+
         public async Task OnGetAsync()
         {
 
             SharedClients = new List<SharedClientViewModel>();
-
+            ClientUpdates = new List<ClientUpdateViewModel>();
 
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -61,6 +62,17 @@ namespace RealEstatePipeline.Pages
                         ClientRegistration = clientInfo
                     });
                     _logger.LogInformation($"Added shared client {sharedClient.Id} with client info {clientInfo.Id}.");
+
+                    // Initialize the ClientUpdates with the current state of the shared clients
+                    ClientUpdates.Add(new ClientUpdateViewModel
+                    {
+                        Id = sharedClient.Id,
+                        HasFoundHouse = sharedClient.HasFoundHouse,
+                        IsContacted = sharedClient.IsContacted,
+                        HasSignedContract = sharedClient.HasSignedContract,
+                        Notes = sharedClient.Notes // Populate the notes
+                    });
+
                 }
                 else
                 {
@@ -84,6 +96,8 @@ namespace RealEstatePipeline.Pages
                     sharedClient.HasFoundHouse = update.HasFoundHouse;
                     sharedClient.IsContacted = update.IsContacted;
                     sharedClient.HasSignedContract = update.HasSignedContract;
+                    //handle notes
+                    sharedClient.Notes = update.Notes;
 
                     // Update other properties as necessary
                 }
@@ -120,7 +134,7 @@ namespace RealEstatePipeline.Pages
 
             // Indicates whether a house has been found for the client
             public bool HasFoundHouse { get; set; }
-
+            public string Notes { get;  set; }
         }
 
 
