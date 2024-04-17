@@ -34,6 +34,18 @@
                             <span asp-validation-for="ClientInput.LocationPreference" class="text-danger"></span>
                         </div>
 
+                        <!--Budgets-->
+                        <div class="mb-4">
+                            <label class="fw-bold" asp-for="ClientInput.MinimumBudget">Minimum Budget</label>
+                            <input asp-for="ClientInput.MinimumBudget" class="form-control" />
+                            <span asp-validation-for="ClientInput.MinimumBudget" class="text-danger"></span>
+                        </div>
+                        <div class="mb-4">
+                            <label class="fw-bold" asp-for="ClientInput.MaximumBudget">Maximum Budget</label>
+                            <input asp-for="ClientInput.MaximumBudget" class="form-control" />
+                            <span asp-validation-for="ClientInput.MaximumBudget" class="text-danger"></span>
+                        </div>
+
                         <!-- Profile Description -->
                         <div class="mb-4">
                             <label class="fw-bold" asp-for="ClientInput.ProfileDescription">Profile Description</label>

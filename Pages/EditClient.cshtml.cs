@@ -46,6 +46,8 @@ namespace RealEstatePipeline.Pages
                 LocationPreference = Client.LocationPreference,
                 ProfileDescription = Client.ProfileDescription,
                 PreferredCommunicationMethod = Client.PreferredCommunicationMethod,
+                MinimumBudget = Client.MinimumBudget,
+                MaximumBudget = Client.MaximumBudget,
                 // Parsing the delimited string for languages
                 SpeaksEnglish = Client.PrimaryLanguage?.Split(',').Contains("English") ?? false,
                 SpeaksSpanish = Client.PrimaryLanguage?.Split(',').Contains("Spanish") ?? false,
@@ -94,6 +96,8 @@ namespace RealEstatePipeline.Pages
                 clientToUpdate.LocationPreference = ClientInput.LocationPreference;
                 clientToUpdate.ProfileDescription = ClientInput.ProfileDescription;
                 clientToUpdate.PreferredCommunicationMethod = ClientInput.PreferredCommunicationMethod;
+                clientToUpdate.MinimumBudget = ClientInput.MinimumBudget;
+                clientToUpdate.MaximumBudget = ClientInput.MaximumBudget;
 
                 var selectedLanguages = new List<string>();
                 if (ClientInput.SpeaksEnglish) selectedLanguages.Add("English");
@@ -151,6 +155,9 @@ namespace RealEstatePipeline.Pages
         public string? ProfileDescription { get; set; } // Optional
 
         public string? PreferredCommunicationMethod { get; set; }
+
+        public decimal? MinimumBudget { get; set; }
+        public decimal? MaximumBudget { get; set; }
 
         public bool SpeaksEnglish { get; set; }
         public bool SpeaksSpanish { get; set; }
