@@ -47,6 +47,9 @@ namespace RealEstatePipeline.Pages
 
             public string? PreferredCommunicationMethod { get; set; }
 
+            public decimal? MinimumBudget { get; set; }
+            public decimal? MaximumBudget { get; set; }
+
             public bool SpeaksEnglish { get; set; }
             public bool SpeaksSpanish { get; set; }
             public bool SpeaksMandarin { get; set; }
@@ -105,6 +108,8 @@ namespace RealEstatePipeline.Pages
                     LocationPreference = Input.LocationPreference,
                     PropertyTypes = string.Join(",", propertyTypes),
                     PreferredCommunicationMethod = Input.PreferredCommunicationMethod,
+                    MinimumBudget = Input.MinimumBudget,
+                    MaximumBudget = Input.MaximumBudget,
                     PrimaryLanguage = languagesSpoken
                 };
 
