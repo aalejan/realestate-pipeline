@@ -39,5 +39,23 @@ namespace RealEstatePipeline.Pages
                 return Page();
             }
         }
+
+        public async Task<IActionResult> OnPostDemoLoginClientAsync()
+        {
+            // Assuming "demo@example.com" is the email of your pre-created demo agent
+            var demoUser = await _userManager.FindByEmailAsync("janeDoe@gmail.com");
+            if (demoUser != null)
+            {
+                // Sign in the demo user
+                await _signInManager.SignInAsync(demoUser, isPersistent: false);
+                return RedirectToPage("/ClientDashboard");  // Redirect to the agent dashboard or another appropriate page
+            }
+            else
+            {
+                // Handle the case where the demo user does not exist
+                ModelState.AddModelError(string.Empty, "Demo account not found.");
+                return Page();
+            }
+        }
     }
 }
