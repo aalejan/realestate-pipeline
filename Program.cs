@@ -43,12 +43,13 @@ namespace RealEstatePipeline
             var connectionString = $"Server={dbServer};{defaultConnectionString};Password={dbPassword};";
 
 
-            System.Diagnostics.Debug.WriteLine("This is the connection string" + connectionString);
+           // System.Diagnostics.Debug.WriteLine("This is the connection string" + connectionString);
 
 
             // Add services to the container.
             builder.Services.AddRazorPages();
 
+            //scoped lifetime
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(connectionString));
 

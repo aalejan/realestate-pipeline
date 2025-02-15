@@ -13,119 +13,139 @@ namespace RealEstatePipeline.Pages
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _context;
         private readonly ClientService _clientService;
+        private readonly ILogger<AgentDashboardModel> _logger;
 
         public bool IsAgent { get; private set; }
-        public string UserId { get; private set; } // Property to store user ID
-
+        public string UserId { get; private set; }
         public Agent_Info Agent { get; private set; }
-        public List<ClientRegistration> SharedClients { get; set; }
+        public List<ClientRegistration> SharedClients { get; private set; } = new();
 
-
-        public AgentDashboardModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext context, ClientService clientService)
+        public AgentDashboardModel(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            ApplicationDbContext context,
+            ClientService clientService,
+            ILogger<AgentDashboardModel> logger)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _context = context;
-            _clientService = clientService; 
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _clientService = clientService ?? throw new ArgumentNullException(nameof(clientService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        // Method to get client info, call this in your Razor view
         public async Task<ApplicationUser> GetClientInfoAsync(string clientId)
         {
+            if (string.IsNullOrEmpty(clientId))
+            {
+                throw new ArgumentException("Client ID cannot be null or empty", nameof(clientId));
+            }
+
             return await _clientService.GetClientByIdAsync(clientId);
         }
 
         public async Task<IActionResult> OnPostLogoutAsync()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToPage("/Index"); // Redirect to the home page or login page
+            return RedirectToPage("/Index");
         }
-        public async Task OnGetAsync()
+
+        public async Task<IActionResult> OnGetAsync()
         {
             try
             {
-                var user = await _userManager.GetUserAsync(User) as Agent_Info;
-                if (user != null)
+                var user = await _userManager.GetUserAsync(User);
+                if (user is not Agent_Info agentInfo)
                 {
-                    IsAgent = await _userManager.IsInRoleAsync(user, "Agent");
-                    UserId = user.Id; // Store the user ID
-
-                    // Retrieve shared clients for the agent
-                    var sharedClients = await _context.SharedClients
-                                                       .Where(r => r.AgentId == UserId)
-                                                       .ToListAsync();
-                    SharedClients = new List<ClientRegistration>(); // Initialize the list
-
-                    foreach (var sharedClient in sharedClients)
-                    {
-                        // Optionally, fetch and store detailed client information here
-                        var clientInfo = await GetClientInfoAsync(sharedClient.ClientId) as ClientRegistration;
-                        if (clientInfo != null)
-                        {
-                            //Add the client to the list
-                            SharedClients.Add(clientInfo);
-                        }
-                    }
-
-                    Agent = user;
+                    _logger.LogWarning("User {UserId} is not an Agent_Info", user?.Id);
+                    return RedirectToPage("/AccessDenied");
                 }
 
-            }
-            catch(Exception ex)
-            {
-                throw new InvalidOperationException($"Error getting agent information: {ex.Message}");
-            }
+                IsAgent = await _userManager.IsInRoleAsync(user, "Agent");
+                if (!IsAgent)
+                {
+                    _logger.LogWarning("User {UserId} is not in Agent role", user.Id);
+                    return RedirectToPage("/AccessDenied");
+                }
 
-           
+                UserId = agentInfo.Id;
+                Agent = agentInfo;
+
+                await LoadSharedClientsAsync();
+
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in OnGetAsync for user {UserId}", UserId);
+                throw;
+            }
+        }
+
+        private async Task LoadSharedClientsAsync()
+        {
+            var sharedClients = await _context.SharedClients
+                .Where(r => r.AgentId == UserId)
+                .AsNoTracking()
+                .ToListAsync();
+
+            var clientTasks = sharedClients.Select(async sc =>
+            {
+                var clientInfo = await GetClientInfoAsync(sc.ClientId) as ClientRegistration;
+                return clientInfo;
+            });
+
+            var clients = await Task.WhenAll(clientTasks);
+            SharedClients = clients.Where(c => c != null).ToList();
         }
 
         public async Task<IActionResult> OnGetProfilePictureAsync(string userId)
         {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("User ID is required");
+            }
+
             try
             {
                 var user = await _userManager.FindByIdAsync(userId) as Agent_Info;
                 if (user?.ProfilePicture != null)
                 {
-                    return File(user.ProfilePicture, "image/jpeg"); // Adjust the content type as needed
+                    return File(user.ProfilePicture, "image/jpeg");
                 }
 
-                // Return a default image or NotFound as appropriate
-                return File("~/images/default-profile.jpg", "image/jpeg"); // Example path to a default image
-
+                return File("~/images/default-profile.jpg", "image/jpeg");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new InvalidOperationException($"Error getting profile picture: {ex.Message}");
+                _logger.LogError(ex, "Error retrieving profile picture for user {UserId}", userId);
+                return StatusCode(500, "Error retrieving profile picture");
+            }
+        }
+
+        public bool IsUserLoggedIn() => User?.Identity?.IsAuthenticated ?? false;
+
+        public async Task<UserProfileInfo> GetUserProfileAsync()
+        {
+            if (!IsUserLoggedIn())
+            {
+                return null;
             }
 
-            
+            var user = await _userManager.GetUserAsync(User);
+            return new UserProfileInfo
+            {
+                Username = user?.UserName,
+                Email = user?.Email,
+                FirstName = user?.FirstName
+            };
         }
+    }
 
-       // public async Task<IActionResult> onSharedClient
-
-        public bool IsUserLoggedIn()
-        {
-            return User.Identity.IsAuthenticated;
-        }
-
-        public string GetUserName()
-        {
-            return User.Identity.Name; // Gets the user's username
-        }
-
-        public string GetUserEmail()
-        {
-            var user = _userManager.GetUserAsync(User).Result;
-            return user?.Email; // Gets the user's email
-        }
-
-        
-        public string GetBio()
-        {
-            var user = _userManager.GetUserAsync(User).Result;
-            return user?.FirstName;
-        }
-        
-        
+    public class UserProfileInfo
+    {
+        public required string Username { get; set; }
+        public required string Email { get; set; }
+        public required string FirstName { get; set; }
     }
 }

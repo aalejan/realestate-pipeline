@@ -7,8 +7,8 @@ namespace RealEstatePipeline.Model
     //base class for all users and inherits from IdentityUser
     public class ApplicationUser : IdentityUser
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public required string FirstName { get; set; }
+        public required string LastName { get; set; }
         public string? LocationPreference { get; set; }
         public string? ProfileDescription { get; set; } // Bio or short description
         public string? PreferredCommunicationMethod { get; set; }

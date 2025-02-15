@@ -4,12 +4,12 @@
     {
         public int Id { get; set; }
 
-        public string ClientId { get; set; } // ForeignKey for the client
-     
-   
+        public required string ClientId { get; set; } // ForeignKey for the client
+
+
 
         // Foreign key for Agent
-        public string AgentId { get; set; }
+        public required string AgentId { get; set; }
 
         // Navigation property for Agent
         public virtual Agent_Info Agent { get; set; }

@@ -11,7 +11,9 @@ namespace RealEstatePipeline.Pages
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<IndexModel> logger)
+        public IndexModel(SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            ILogger<IndexModel> logger)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -24,38 +26,28 @@ namespace RealEstatePipeline.Pages
 
         public async Task<IActionResult> OnPostDemoLoginAsync()
         {
-            // Assuming "demo@example.com" is the email of your pre-created demo agent
             var demoUser = await _userManager.FindByEmailAsync("johnDoe@gmail.com");
             if (demoUser != null)
             {
-                // Sign in the demo user
                 await _signInManager.SignInAsync(demoUser, isPersistent: false);
-                return RedirectToPage("/AgentDashboard");  // Redirect to the agent dashboard or another appropriate page
+                return RedirectToPage("/AgentDashboard");
             }
-            else
-            {
-                // Handle the case where the demo user does not exist
-                ModelState.AddModelError(string.Empty, "Demo account not found.");
-                return Page();
-            }
+
+            ModelState.AddModelError(string.Empty, "Demo account not found.");
+            return Page();
         }
 
         public async Task<IActionResult> OnPostDemoLoginClientAsync()
         {
-            // Assuming "demo@example.com" is the email of your pre-created demo agent
             var demoUser = await _userManager.FindByEmailAsync("janeDoe@gmail.com");
             if (demoUser != null)
             {
-                // Sign in the demo user
                 await _signInManager.SignInAsync(demoUser, isPersistent: false);
-                return RedirectToPage("/ClientDashboard");  // Redirect to the agent dashboard or another appropriate page
+                return RedirectToPage("/ClientDashboard");
             }
-            else
-            {
-                // Handle the case where the demo user does not exist
-                ModelState.AddModelError(string.Empty, "Demo account not found.");
-                return Page();
-            }
+
+            ModelState.AddModelError(string.Empty, "Demo account not found.");
+            return Page();
         }
     }
 }

@@ -17,6 +17,8 @@ namespace RealEstatePipeline.Pages
 
 
         public List<SharedClientViewModel> SharedClients { get; set; }
+        [BindProperty]
+        public List<ClientUpdateViewModel> ClientUpdates { get; set; }
 
         public ManageClientsModel(UserManager<ApplicationUser> userManager, ApplicationDbContext context, ClientService clientService, ILogger<ManageClientsModel> logger)
         {
@@ -24,17 +26,17 @@ namespace RealEstatePipeline.Pages
             _context = context;
             _clientService = clientService;
             _logger = logger;
+            SharedClients = new List<SharedClientViewModel>();
+            ClientUpdates = new List<ClientUpdateViewModel>();
         }
 
-        [BindProperty]
-        public List<ClientUpdateViewModel> ClientUpdates { get; set; }
+      
 
 
         public async Task OnGetAsync()
         {
 
-            SharedClients = new List<SharedClientViewModel>();
-            ClientUpdates = new List<ClientUpdateViewModel>();
+           
 
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -85,7 +87,15 @@ namespace RealEstatePipeline.Pages
         {
             if (!ModelState.IsValid)
             {
-                return Page();
+                _logger.LogWarning("Model state is invalid.");
+                // Log model state errors
+                foreach (var modelState in ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        _logger.LogError(error.ErrorMessage);
+                    }
+                }
             }
 
             foreach (var update in ClientUpdates)
@@ -93,17 +103,30 @@ namespace RealEstatePipeline.Pages
                 var sharedClient = await _context.SharedClients.FindAsync(update.Id);
                 if (sharedClient != null)
                 {
+                    _logger.LogInformation($"Updating shared client {sharedClient.Id}");
                     sharedClient.HasFoundHouse = update.HasFoundHouse;
                     sharedClient.IsContacted = update.IsContacted;
                     sharedClient.HasSignedContract = update.HasSignedContract;
-                    //handle notes
                     sharedClient.Notes = update.Notes;
 
                     // Update other properties as necessary
                 }
+                else
+                {
+                    _logger.LogWarning($"Shared client {update.Id} not found.");
+                }
             }
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Changes saved to the database.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error saving changes: {ex.Message}");
+            }
+
             return RedirectToPage();
         }
 

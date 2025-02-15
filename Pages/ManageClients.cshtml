@@ -1,47 +1,108 @@
 ﻿@page
 @model RealEstatePipeline.Pages.ManageClientsModel
 @{
+    ViewData["Title"] = "Manage Clients";
 }
-<form method="post">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Client Name</th>
-                <th> Contacted</th>
-                <th>Has Signed Contract</th>
-                <th>Has Found House</th>
-                <th>Notes</th>
-                <!-- Add headers for other fields -->
-            </tr>
-        </thead>
-        <tbody>
-            @for (int i = 0; i < Model.SharedClients.Count; i++)
+
+<div class="container py-4">
+    <div class="card">
+        <div class="card-header bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Client Management</h5>
+                <button type="button" class="btn btn-outline-primary btn-sm" onclick="toggleAllNotes()">
+                    <i class="fas fa-expand me-1"></i>Expand All Notes
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            @if (!Model.SharedClients.Any())
             {
-                <tr>
-                    <td>
-                        @Model.SharedClients[i].ClientRegistration.FirstName @Model.SharedClients[i].ClientRegistration.LastName
-                        <input type="hidden" asp-for="ClientUpdates[i].Id" value="@Model.SharedClients[i].SharedClient.Id" />
-                    </td>
-                    <td>
-                        <input type="checkbox" asp-for="ClientUpdates[i].IsContacted" />
-                    </td>
-
-                    <td>
-                        <input type="checkbox" asp-for="ClientUpdates[i].HasSignedContract" />
-                    </td>
-                    <td>
-                        <input type="checkbox" asp-for="ClientUpdates[i].HasFoundHouse" />
-
-                    </td>
-
-                    <td>
-                        <textarea asp-for="ClientUpdates[i].Notes" class="form-control"></textarea>
-                    </td>
-
-                    <!-- Add inputs for other editable fields -->
-                </tr>
+                <div class="text-center py-5">
+                    <i class="fas fa-users fs-1 text-muted mb-3"></i>
+                    <h5 class="text-muted">No clients assigned yet</h5>
+                    <p class="text-muted">When clients are assigned to you, they will appear here.</p>
+                </div>
             }
-        </tbody>
-    </table>
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-</form>
+            else
+            {
+                <form method="post">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Client Name</th>
+                                    <th class="text-center">Status Updates</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.SharedClients.Count; i++)
+                                {
+                                    var client = Model.SharedClients[i];
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-light text-primary rounded-circle p-2 d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                                                    @(client.ClientRegistration.FirstName[0])@(client.ClientRegistration.LastName[0])
+                                                </div>
+                                                <div>
+                                                    <div>@client.ClientRegistration.FirstName @client.ClientRegistration.LastName</div>
+                                                    <small class="text-muted">@client.ClientRegistration.Email</small>
+                                                    <input type="hidden" asp-for="ClientUpdates[i].Id" value="@Model.SharedClients[i].SharedClient.Id" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex justify-content-center gap-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" asp-for="ClientUpdates[i].IsContacted" />
+                                                    <label class="form-check-label small">Contacted</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" asp-for="ClientUpdates[i].HasSignedContract" />
+                                                    <label class="form-check-label small">Contract</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" asp-for="ClientUpdates[i].HasFoundHouse" />
+                                                    <label class="form-check-label small">Found House</label>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <textarea asp-for="ClientUpdates[i].Notes"
+                                                      class="form-control"
+                                                      rows="2"
+                                                      placeholder="Add notes about this client..."></textarea>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-end mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Save Changes
+                        </button>
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleAllNotes() {
+            const textareas = document.querySelectorAll('textarea');
+            const button = document.querySelector('.btn-outline-primary');
+            const isExpanded = button.getAttribute('data-expanded') === 'true';
+
+            textareas.forEach(textarea => {
+                textarea.rows = isExpanded ? 2 : 6;
+            });
+
+            button.setAttribute('data-expanded', !isExpanded);
+            button.innerHTML = `<i class="fas fa-${isExpanded ? 'expand' : 'compress'} me-1"></i>${isExpanded ? 'Expand' : 'Collapse'} All Notes`;
+        }
+    </script>
+}

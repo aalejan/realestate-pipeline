@@ -73,7 +73,7 @@ namespace RealEstatePipeline.Pages
             return Page();
         }
 
-         
+
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -133,7 +133,7 @@ namespace RealEstatePipeline.Pages
             string[] languages = new[] { "English", "Spanish", "Mandarin", "French", "Arabic", "Russian", "Portuguese", "German", "Japanese", "Hindi" };
             var selectedLanguages = new List<string>();
 
-            
+
             foreach (var language in languages)
             {
                 //GetType finds out the model type (InputModel) and then allows you to get property bc it knows it's InputModel
@@ -145,31 +145,31 @@ namespace RealEstatePipeline.Pages
             }
 
             agent.PrimaryLanguage = string.Join(",", selectedLanguages);
-            
+
 
         }
 
         public class InputModel
         {
             public string Id { get; set; }
-            public string Email { get; set; }
 
-            public string FirstName { get; set; }
+            [Required, EmailAddress]
+            public required string Email { get; set; }
 
+            [Required]
+            public required string FirstName { get; set; }
 
-            public string LastName { get; set; }
+            [Required]
+            public required string LastName { get; set; }
 
-
+            [Range(0, 100)]
             public int YearsOfExperience { get; set; }
 
             public string? LocationPreference { get; set; }
-
-            public string? ProfileDescription { get; set; } // Optional
-
+            public string? ProfileDescription { get; set; }
             public string? PreferredCommunicationMethod { get; set; }
 
-
-
+            // Language properties
             public bool SpeaksEnglish { get; set; }
             public bool SpeaksSpanish { get; set; }
             public bool SpeaksMandarin { get; set; }
@@ -180,6 +180,8 @@ namespace RealEstatePipeline.Pages
             public bool SpeaksGerman { get; set; }
             public bool SpeaksJapanese { get; set; }
             public bool SpeaksHindi { get; set; }
+
+            // Property type preferences
             public bool IsResidential { get; set; }
             public bool IsCommercial { get; set; }
             public bool IsIndustrial { get; set; }
